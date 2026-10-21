@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>LiquidDrop — Your space, beautifully kept</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <div class="orb orb-one" aria-hidden="true"></div>
+  <div class="orb orb-two" aria-hidden="true"></div>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="topbar shell">
+    <a class="brand" href="./index.html">
+      <span class="brand-mark">◒</span>
+      LiquidDrop<span class="brand-dot">.</span>
+    </a>
+
+    <div class="header-actions">
+      <span id="user-email" class="user-email" hidden></span>
+      <button id="theme-toggle" class="icon-button"
+        aria-label="Switch to dark mode">◐</button>
+      <button id="logout" class="button secondary" hidden>Log out</button>
+    </div>
+  </header>
+
+  <main id="main" class="shell">
+    <section class="hero">
+      <span class="eyebrow">A LITTLE LESS CLUTTER. A LOT MORE CALM.</span>
+      <h1>Everything you need.<br><span>In your own space.</span></h1>
+      <p>Your files, neatly kept and ready when you are.</p>
+    </section>
+
+    <div id="startup" class="glass notice" role="status">
+      Connecting to your space…
+    </div>
+
+    <section id="auth-panel" class="glass auth-card"
+      aria-labelledby="auth-heading" hidden>
+      <div>
+        <span class="eyebrow">MAKE ROOM FOR YOUR IDEAS</span>
+        <h2 id="auth-heading">Welcome back</h2>
+        <p class="muted">Sign in to upload and access your private files.</p>
+        <p class="privacy-note">↗ Private bucket · Your account · Your files</p>
+      </div>
+
+      <form id="auth-form">
+        <div class="segmented" aria-label="Account action">
+          <button type="button" id="login-tab" aria-pressed="true">Log in</button>
+          <button type="button" id="signup-tab" aria-pressed="false">Sign up</button>
+        </div>
+
+        <label for="email">Email address</label>
+        <input id="email" type="email" autocomplete="email"
+          required maxlength="254" placeholder="you@example.com">
+
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password"
+          required minlength="8" placeholder="At least 8 characters">
+
+        <button id="auth-submit" class="button primary" type="submit">
+          Log in
+        </button>
+        <p id="auth-message" class="message" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section id="workspace" hidden aria-label="Your file manager">
+      <div class="overview">
+        <div>
+          <span class="eyebrow">YOUR PERSONAL CLOUD</span>
+          <h2>Room for what matters.</h2>
+        </div>
+
+        <div class="stats glass">
+          <div><strong id="file-count">—</strong><span>saved files</span></div>
+          <div><strong id="total-size">—</strong><span>stored</span></div>
+        </div>
+      </div>
+
+      <section id="drop-zone" class="glass drop-zone"
+        aria-labelledby="upload-heading">
+        <div class="upload-symbol" aria-hidden="true">↑</div>
+        <span class="eyebrow">DROP IT HERE. KEEP IT CLOSE.</span>
+        <h2 id="upload-heading">A new home for your files</h2>
+        <p>Drag files here, choose from your device, or paste an image.</p>
+
+        <button id="choose-files" class="button primary">＋ Choose Files</button>
+        <input id="file-input" type="file" multiple hidden>
+
+        <p id="upload-limit" class="small muted"></p>
+        <div id="upload-success" class="success-check" role="status" hidden>
+          ✓ Upload saved
+        </div>
+      </section>
+
+      <section id="queue-panel" class="glass queue-panel"
+        aria-labelledby="queue-heading" hidden>
+        <div class="section-heading">
+          <h3 id="queue-heading">Upload queue</h3>
+          <button id="clear-queue" class="button secondary">Clear finished</button>
+        </div>
+        <p class="small muted">
+          Uploads start automatically. Keep this tab open until they finish.
+        </p>
+        <ul id="queue" class="queue"></ul>
+      </section>
+
+      <section class="files-section" aria-labelledby="files-heading">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">ALL IN ONE PLACE</span>
+            <h2 id="files-heading">Your files</h2>
+          </div>
+          <button id="refresh-files" class="button secondary">↻ Refresh</button>
+        </div>
+
+        <div class="toolbar glass">
+          <label class="search-field" for="search">
+            <span class="sr-only">Search filenames</span>
+            <input id="search" type="search" placeholder="Search your files…">
+          </label>
+
+          <label>
+            <span class="sr-only">Filter category</span>
+            <select id="category">
+              <option value="all">All types</option>
+              <option value="image">Images</option>
+              <option value="pdf">PDFs</option>
+              <option value="audio">Audio</option>
+              <option value="video">Videos</option>
+              <option value="other">Other</option>
+            </select>
+          </label>
+
+          <label>
+            <span class="sr-only">Sort files</span>
+            <select id="sort">
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+              <option value="name">Filename A–Z</option>
+              <option value="size">Largest first</option>
+            </select>
+          </label>
+
+          <div class="segmented view-switch" aria-label="File view">
+            <button id="grid-view" aria-pressed="true" aria-label="Grid view">
+              ▦
+            </button>
+            <button id="list-view" aria-pressed="false" aria-label="List view">
+              ☰
+            </button>
+          </div>
+        </div>
+
+        <p id="list-status" class="muted small" role="status"></p>
+        <div id="files" class="files grid" aria-busy="false"></div>
+
+        <div id="empty-state" class="glass empty-state" hidden>
+          <span aria-hidden="true">◇</span>
+          <h3 id="empty-heading">A fresh start</h3>
+          <p id="empty-text">Upload your first file to make this space yours.</p>
+        </div>
+
+        <div id="load-error" class="glass empty-state" hidden>
+          <h3>Couldn’t load your files</h3>
+          <p id="load-error-text" class="message error"></p>
+          <button id="retry-load" class="button secondary">Try again</button>
+        </div>
+      </section>
+    </section>
+
+    <footer>
+      LiquidDrop <span>Made for a little peace of mind.</span>
+    </footer>
+  </main>
+
+  <dialog id="preview-dialog" class="glass modal">
+    <div class="section-heading">
+      <h2 id="preview-title">File preview</h2>
+      <button id="close-preview" class="icon-button"
+        aria-label="Close preview">✕</button>
+    </div>
+    <div id="preview-content" class="preview-content"></div>
+    <button id="preview-download" class="button primary">Download file</button>
+  </dialog>
+
+  <dialog id="delete-dialog" class="glass modal compact">
+    <h2>Delete this file?</h2>
+    <p id="delete-name" class="break-name"></p>
+    <p class="muted">This removes the saved file permanently.</p>
+    <p id="delete-message" class="message" role="status"></p>
+    <div class="dialog-actions">
+      <button id="cancel-delete" class="button secondary">Keep file</button>
+      <button id="confirm-delete" class="button danger">Delete file</button>
+    </div>
+  </dialog>
+
+  <div id="toasts" class="toasts"
+    aria-live="polite" aria-relevant="additions"></div>
+</body>
+</html>
